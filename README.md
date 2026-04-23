@@ -1,4 +1,4 @@
-# MambaLiteUNet
+# MambaLiteUNet | [Paper Link](https://arxiv.org/abs/2604.20286)
 
 This is the official repository for **MambaLiteUNet: Cross-Gated Adaptive Feature Fusion for Robust Skin Lesion Segmentation**.
 This repository provides code for environment setup, installing dependencies, preparing datasets, training, and testing.
