@@ -134,8 +134,19 @@ python train.py
 3. Outputs will be saved in `./results/`.
 
 ---
+### 4. Citation
+If you find this repository helpful, please consider citing our paper:
+```
+@article{rahman2026mambaliteunet,
+  title={MambaLiteUNet: Cross-Gated Adaptive Feature Fusion for Robust Skin Lesion Segmentation},
+  author={Rahman, Md Maklachur and Jung, Soon Ki and Hammond, Tracy},
+  journal={arXiv preprint arXiv:2604.20286},
+  year={2026}
+}
+```
+---
 
-## 4. Acknowledgements
+## 5. Acknowledgements
 
 We thank the organizers of the ISIC 2017 and ISIC 2018 Challenges and the open-source community for publicly releasing valuable datasets, including HAM10000, PH2, and others. We also acknowledge the authors of the open-source repositories used in this work: [VMamba](https://github.com/MzeroMiko/VMamba), [Vision Mamba](https://github.com/hustvl/Vim), [VM-UNet](https://github.com/JCruan519/VM-UNet), and [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet).
 
