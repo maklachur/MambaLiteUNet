@@ -1,7 +1,10 @@
-# MambaLiteUNet | [Paper Link](https://arxiv.org/abs/2604.20286)
+# MambaLiteUNet | [arXiv](https://arxiv.org/abs/2604.20286) | [Slides](https://cvpr.thecvf.com/media/cvpr-2026/Slides/36828_2CEf7jM.pdf) | [Paper Link](https://openaccess.thecvf.com/content/CVPR2026/html/Rahman_MambaLiteUNet_Cross-Gated_Adaptive_Feature_Fusion_for_Robust_Skin_Lesion_Segmentation_CVPR_2026_paper.html) 
 
 This is the official repository for **MambaLiteUNet: Cross-Gated Adaptive Feature Fusion for Robust Skin Lesion Segmentation**.
 This repository provides code for environment setup, installing dependencies, preparing datasets, training, and testing.
+
+---
+<p align="center"> <img src="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202026/36828.png?t=1779053789.472832" alt="MambaLiteUNet CVPR 2026 Poster" width="1280"> </p>
 
 ---
 
