@@ -140,10 +140,11 @@ python train.py
 ### 4. Citation
 If you find this repository helpful, please consider citing our paper:
 ```
-@article{rahman2026mambaliteunet,
+@inproceedings{mambaliteunet,
   title={MambaLiteUNet: Cross-Gated Adaptive Feature Fusion for Robust Skin Lesion Segmentation},
   author={Rahman, Md Maklachur and Jung, Soon Ki and Hammond, Tracy},
-  journal={arXiv preprint arXiv:2604.20286},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={8556--8565},
   year={2026}
 }
 ```
