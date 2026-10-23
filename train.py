@@ -1,3 +1,18 @@
+import sys
+
+# Parse QAM-Seg flags before importing the supervised training stack.
+# `python train.py` with no extra flags is unchanged.
+# `--ssl` dispatches to the SSL path and returns. Ablation flags still exit 2.
+if __name__ == '__main__':
+    from qamseg.cli import parse_train_args, refuse_reserved_flags
+    _args, _unknown, _reserved = parse_train_args(sys.argv[1:])
+    refuse_reserved_flags(_reserved)
+    if _args.ssl:
+        from qamseg.train_ssl import main as ssl_main
+        raise SystemExit(ssl_main(sys.argv[1:]))
+    if _unknown:
+        print('QAM-Seg: ignoring unrecognized arguments: ' + ' '.join(_unknown))
+
 import torch
 from torch import nn
 from torch.cuda.amp import autocast, GradScaler
@@ -7,7 +22,6 @@ from loader import *
 from models.MambaLiteUNet import MambaLiteUNet
 from engine import *
 import os
-import sys
 os.environ["CUDA_VISIBLE_DEVICES"] = "0" # "0, 1, 2, 3"
 
 from utils import *

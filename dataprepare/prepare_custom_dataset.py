@@ -1,58 +1,65 @@
-##scipy==1.2.1
+#!/usr/bin/env python3
+"""Prepare a custom paired image/mask dataset into .npy splits using PIL."""
 
-import h5py
-import numpy as np
-import scipy.io as sio
-import scipy.misc as sc
-import glob
+from __future__ import annotations
 
-# Parameters
-height = 256 # Enter the image size of the model.
-width  = 256 # Enter the image size of the model.
-channels = 3 # Number of image channels
+import argparse
+import sys
+from pathlib import Path
 
-train_number = 1000 # Randomly assign the number of images for generating the training set.
-val_number = 200   # Randomly assign the number of images for generating the validation set.
-test_number = 400  # Randomly assign the number of images for generating the test set.
-all = int(train_number) + int(val_number) + int(test_number)
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-############################################################# Prepare your data set #################################################
-Tr_list = glob.glob("images"+'/*.png')   # Images storage folder. The image type should be 24-bit png format.
-# It contains 2594 training samples
-Data_train_2018    = np.zeros([all, height, width, channels])
-Label_train_2018   = np.zeros([all, height, width])
-
-print('Reading')
-print(len(Tr_list))
-for idx in range(len(Tr_list)):
-    print(idx+1)
-    img = sc.imread(Tr_list[idx])
-    img = np.double(sc.imresize(img, [height, width, channels], interp='bilinear', mode = 'RGB'))
-    Data_train_2018[idx, :,:,:] = img
-
-    b = Tr_list[idx]
-    b = b[len(b)-8: len(b)-4]
-    add = ("masks/" + b +'.png')  # Masks storage folder. The Mask type should be a black and white image of an 8-bit png (0 pixels for the background and 255 pixels for the target).
-    img2 = sc.imread(add)
-    img2 = np.double(sc.imresize(img2, [height, width], interp='bilinear'))
-    Label_train_2018[idx, :,:] = img2    
-         
-print('Reading your dataset finished')
-
-################################################################ Make the training, validation and test sets ########################################    
-Train_img      = Data_train_2018[0:train_number,:,:,:]  
-Validation_img = Data_train_2018[train_number:train_number+val_number,:,:,:]
-Test_img       = Data_train_2018[train_number+val_number:all,:,:,:]
-
-Train_mask      = Label_train_2018[0:train_number,:,:]
-Validation_mask = Label_train_2018[train_number:train_number+val_number,:,:]
-Test_mask       = Label_train_2018[train_number+val_number:all,:,:]
+from dataprepare.common import (  # noqa: E402
+    build_and_save_splits,
+    collect_paired_files,
+    default_out_dir,
+)
 
 
-np.save('data_train', Train_img)
-np.save('data_test' , Test_img)
-np.save('data_val'  , Validation_img)
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Prepare custom images/ and masks/ into .npy splits.")
+    parser.add_argument("--image-dir", default="images")
+    parser.add_argument("--mask-dir", default="masks")
+    parser.add_argument("--out-dir", default=default_out_dir("custom"))
+    parser.add_argument("--height", type=int, default=256)
+    parser.add_argument("--width", type=int, default=256)
+    parser.add_argument("--train-count", type=int, default=None)
+    parser.add_argument("--val-count", type=int, default=None)
+    parser.add_argument("--test-count", type=int, default=None)
+    parser.add_argument("--eval-only", action="store_true")
+    parser.add_argument("--dtype", default="uint8", choices=("uint8", "float32", "float64"))
+    parser.add_argument("--also-save-cwd", action="store_true")
+    return parser
 
-np.save('mask_train', Train_mask)
-np.save('mask_test' , Test_mask)
-np.save('mask_val'  , Validation_mask)
+
+def main(argv=None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        pairs = collect_paired_files([args.image_dir], [args.mask_dir])
+        summary = build_and_save_splits(
+            pairs,
+            args.out_dir,
+            height=int(args.height),
+            width=int(args.width),
+            train_count=args.train_count,
+            val_count=args.val_count,
+            test_count=args.test_count,
+            ratios=(0.7, 0.1, 0.2),
+            eval_only=bool(args.eval_only),
+            dtype=str(args.dtype),
+            also_save_cwd=bool(args.also_save_cwd),
+        )
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"prepare_custom_dataset: {exc}")
+        return 2
+
+    print(f"Prepared custom dataset ({len(pairs)} paired samples) -> {args.out_dir}")
+    for name, shape in summary.items():
+        print(f"  {name}.npy: {shape}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

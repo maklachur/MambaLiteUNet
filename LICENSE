@@ -1,0 +1,40 @@
+MIT License
+
+Copyright (c) 2026 QAM-Seg contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Note on upstream code
+---------------------
+
+This repository is a fork of MambaLiteUNet
+(https://github.com/maklachur/MambaLiteUNet; Rahman, Jung, and Hammond,
+CVPR 2026). As of the fork, that upstream repository publishes no LICENSE
+file, and its GitHub license metadata is empty. The license of the inherited
+MambaLiteUNet sources is therefore unclear. Nothing in this file claims that
+the upstream authors released their code under MIT.
+
+This MIT license is granted by the QAM-Seg fork contributors for the rights
+they hold: the QAM-Seg additions (documentation, the parameter/FLOP script,
+HD95 helpers, and SSL scaffolding). It does not relicense unmodified upstream
+files. If the upstream authors publish a license, that license governs the
+inherited files. Until then, treat unmodified upstream files as all rights
+reserved by their authors.
+
+See THIRD_PARTY.md.

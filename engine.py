@@ -3,7 +3,33 @@ from tqdm import tqdm
 import torch
 from torch.cuda.amp import autocast as autocast
 from sklearn.metrics import confusion_matrix
-from utils import save_imgs, save_predicted_mask, save_all_individually
+from utils import (
+    save_imgs,
+    save_predicted_mask,
+    save_all_individually,
+    summarize_hd95,
+    summarize_assd,
+    format_hd95,
+)
+
+
+def _hd95_for_log(preds, gts, threshold):
+    """HD95 text for the existing val/test log line.
+
+    Failures are reported as n/a. Pixel-pooled metrics keep running.
+    """
+    try:
+        return format_hd95(summarize_hd95(preds, gts, threshold=threshold))
+    except Exception as exc:
+        return f'n/a ({type(exc).__name__}: {exc})'
+
+
+def _assd_for_log(preds, gts, threshold):
+    """ASSD text. Same failure policy as HD95. Does not replace other metrics."""
+    try:
+        return format_hd95(summarize_assd(preds, gts, threshold=threshold))
+    except Exception as exc:
+        return f'n/a ({type(exc).__name__}: {exc})'
 
 
 def train_one_epoch(train_loader,
@@ -75,6 +101,9 @@ def val_one_epoch(test_loader,
             preds.append(out) 
 
     if epoch % config.val_interval == 0:
+        # HD95 needs whole masks. The confusion matrix below still pools pixels.
+        hd95_text = _hd95_for_log(preds, gts, config.threshold)
+        assd_text = _assd_for_log(preds, gts, config.threshold)
         preds = np.array(preds).reshape(-1)
         gts = np.array(gts).reshape(-1)
 
@@ -91,7 +120,7 @@ def val_one_epoch(test_loader,
         miou = float(TP) / float(TP + FP + FN) if float(TP + FP + FN) != 0 else 0
 
         log_info = f'val epoch: {epoch}, loss: {np.mean(loss_list):.4f}, miou: {miou}, f1_or_dsc: {f1_or_dsc}, accuracy: {accuracy}, \
-                specificity: {specificity}, sensitivity: {sensitivity}, confusion_matrix: {confusion}'
+                specificity: {specificity}, sensitivity: {sensitivity}, hd95: {hd95_text}, assd: {assd_text}, confusion_matrix: {confusion}'
         print(log_info)
         logger.info(log_info)
 
@@ -137,6 +166,8 @@ def test_one_epoch(test_loader,
             #save_all_individually img, gt, and pred
             #save_all_individually(img, msk, out, i, config.work_dir + 'outputs/', config.datasets, config.threshold, test_data_name=test_data_name)
             
+        hd95_text = _hd95_for_log(preds, gts, config.threshold)
+        assd_text = _assd_for_log(preds, gts, config.threshold)
         preds = np.array(preds).reshape(-1)
         gts = np.array(gts).reshape(-1)
 
@@ -157,7 +188,7 @@ def test_one_epoch(test_loader,
             print(log_info)
             logger.info(log_info)
         log_info = f'test of best model, loss: {np.mean(loss_list):.4f},miou: {miou}, f1_or_dsc: {f1_or_dsc}, accuracy: {accuracy}, \
-                specificity: {specificity}, sensitivity: {sensitivity}, confusion_matrix: {confusion}'
+                specificity: {specificity}, sensitivity: {sensitivity}, hd95: {hd95_text}, assd: {assd_text}, confusion_matrix: {confusion}'
         print(log_info)
         logger.info(log_info)
 
