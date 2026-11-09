@@ -1,7 +1,6 @@
 # MambaLiteUNet | [arXiv](https://arxiv.org/abs/2604.20286) | [Slides](https://cvpr.thecvf.com/media/cvpr-2026/Slides/36828_2CEf7jM.pdf) | [Paper Link](https://openaccess.thecvf.com/content/CVPR2026/html/Rahman_MambaLiteUNet_Cross-Gated_Adaptive_Feature_Fusion_for_Robust_Skin_Lesion_Segmentation_CVPR_2026_paper.html) 
 
-This is the official repository for **MambaLiteUNet: Cross-Gated Adaptive Feature Fusion for Robust Skin Lesion Segmentation**.
-This repository provides code for environment setup, installing dependencies, preparing datasets, training, and testing.
+This repository provides code for **MambaLiteUNet: Cross-Gated Adaptive Feature Fusion for Robust Skin Lesion Segmentation**, including environment setup, dependency installation, dataset preparation, training, and testing.
 
 ---
 <p align="center"> <img src="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202026/36828.png?t=1779053789.472832" alt="MambaLiteUNet CVPR 2026 Poster" width="1280"> </p>
@@ -135,6 +134,12 @@ python train.py
    python test.py
    ```
 3. Outputs will be saved in `./results/`.
+
+### N.B. — Additional Notes on Model Complexity
+
+Since MambaLiteUNet incorporates Mamba-based components, we adopted a profiling approach similar to those used in related Mamba-based segmentation models to maintain methodological consistency in our comparisons. Specifically, the model complexity reported in our paper was evaluated using `thop.profile()` with an input resolution of 256 × 256, following approaches similar to those implemented in [VM-UNet](https://github.com/JCruan519/VM-UNet), [VM-UNetV2](https://github.com/nobodyplayer1/VM-UNetV2), and [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet), which were included as baseline models in our study.
+
+Due to the specific computational characteristics of Mamba/SSM architectures, comprehensive FLOPs estimation may require additional accounting for selective-scan operations, as discussed in the [mamba repo](https://github.com/state-spaces/mamba/issues/110#issuecomment-1919470069). Additionally, thop-reported parameter counts may differ from the complete parameter count obtained directly through PyTorch, depending on the profiler version and implementation.
 
 ---
 ### 4. Citation
