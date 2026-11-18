@@ -135,15 +135,30 @@ python train.py
    ```
 3. Outputs will be saved in `./results/`.
 
-### N.B. — Additional Notes on Model Complexity
+### N.B. Additional Notes on Model Complexity
 
 Since MambaLiteUNet incorporates Mamba-based components, we adopted a profiling approach similar to those used in related Mamba-based segmentation models to maintain methodological consistency in our comparisons. Specifically, the model complexity reported in our paper was evaluated using `thop.profile()` with an input resolution of 256 × 256, following approaches similar to those implemented in [VM-UNet](https://github.com/JCruan519/VM-UNet), [VM-UNetV2](https://github.com/nobodyplayer1/VM-UNetV2), and [UltraLight-VM-UNet](https://github.com/wurenkai/UltraLight-VM-UNet), which were included as baseline models in our study.
 
 Due to the specific computational characteristics of Mamba/SSM architectures, comprehensive FLOPs estimation may require additional accounting for selective-scan operations, as discussed in the [mamba repo](https://github.com/state-spaces/mamba/issues/110#issuecomment-1919470069). Additionally, thop-reported parameter counts may differ from the complete parameter count obtained directly through PyTorch, depending on the profiler version and implementation.
 
+
+### Notes on Reproducibility and Experimental Variability
+
+Exact reproduction of deep learning results can be challenging, even when using the same code and random seeds. Small variations in performance may arise due to two main factors:
+1. Non-deterministic GPU kernels: Some CUDA operations may not be fully deterministic, depending on their implementation. Results can therefore vary across runs, GPU architectures, and library versions.
+2. Training configuration and checkpoint selection: Even with identical data splits and preprocessing, differences in effective batch size and checkpoint-selection criteria can affect the final results. On smaller datasets, such variations may have a greater impact.
+
+We believe these references can help you learn more:
+References:
+[1] [PyTorch Reproducibility Notes](https://docs.pytorch.org/docs/stable/notes/randomness.html)
+[2] [Summers & Dinneen, ICML 2021](https://proceedings.mlr.press/v139/summers21a.html)
+[3] [Bouthillier et al., MLSys 2021](https://proceedings.mlsys.org/paper_files/paper/2021/hash/0184b0cd3cfb185989f858a1d9f5c1eb-Abstract.html)
+[4] [Zhuang et al., MLSys 2022](https://proceedings.mlsys.org/paper_files/paper/2022/hash/427e0e886ebf87538afdf0badb805b7f-Abstract.html)
+[5] [Åkesson et al., Computers in Biology and Medicine, 2024](https://www.sciencedirect.com/science/article/pii/S0010482524010291)
+
 ---
 ### 4. Citation
-If you find this repository helpful, please consider citing our paper:
+If you find this repository or our work useful in any way, please consider citing our paper:
 ```
 @inproceedings{mambaliteunet,
   title={MambaLiteUNet: Cross-Gated Adaptive Feature Fusion for Robust Skin Lesion Segmentation},
